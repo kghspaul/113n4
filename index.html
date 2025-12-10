@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全國113第四次模考 - 詳解 (四按鈕版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .cloze-blank {
+            display: inline-block;
+            border-bottom: 2px solid #3b82f6;
+            padding: 0 4px;
+            font-weight: 700;
+            color: #2563eb;
+            min-width: 30px;
+            text-align: center;
+        }
+        /* Fade in animation */
+        .fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4 relative pb-24">
+
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 mb-8 sticky top-4 z-50 ring-1 ring-gray-900/5">
+        <h1 class="text-2xl font-bold text-gray-800 text-center mb-2">全國113第四次模考 英文科</h1>
+        <p class="text-sm text-gray-500 text-center mb-6">輸入題號 (1-50) 查看詳解，或使用下方功能鍵</p>
+        
+        <div class="flex flex-col sm:flex-row gap-3">
+            <input type="text" id="queryInput" placeholder="輸入題號 (如: 26)" 
+                class="w-full sm:flex-1 border-2 border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 text-lg transition-colors shadow-sm text-center sm:text-left"
+                autocomplete="off">
+            
+            <div class="grid grid-cols-2 sm:flex sm:flex-none gap-2 w-full sm:w-auto">
+                <button id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    查詢
+                </button>
+                <button id="allAnsBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    所有答案
+                </button>
+                <button id="allDetailBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    所有詳解
+                </button>
+                <button id="clearBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-lg transition-colors border border-gray-300">
+                    清除
+                </button>
+            </div>
+        </div>
+        <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden text-center font-medium">⚠️ 請輸入有效的題號 (1-50)</p>
+    </div>
+
+    <div id="resultArea" class="w-full max-w-3xl mb-8 space-y-8">
+        <div class="text-center text-gray-400 mt-10">
+            請輸入題號或點擊上方按鈕開始
+        </div>
+    </div>
+
+    <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-sm border border-gray-200 shadow-md rounded-full px-5 py-2 flex items-center gap-4 text-xs sm:text-sm text-gray-500 font-medium z-40 whitespace-nowrap">
+        <div class="flex items-center gap-1" title="全球總瀏覽次數">
+            <span class="text-blue-500">🌏</span>
+            <span>總瀏覽: 
+                <span id="busuanzi_container_site_pv" style="display:inline;">
+                    <span id="busuanzi_value_site_pv" class="font-bold text-gray-800 animate-pulse">--</span>
+                </span>
+            </span>
+        </div>
+        <div class="w-px h-4 bg-gray-300"></div>
+        <div class="flex items-center gap-1" title="本次操作次數">
+            <span class="text-emerald-500">🔍</span>
+            <span>操作次數: <span id="sessionQueryCount" class="font-bold text-gray-800">0</span></span>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // Data Source
+        // ==========================================
+        const examData = [
+            // --- Part 1: Vocabulary (1-25) ---
+            { id: 1, ans: "C", q: "When writing a research paper, it is essential to critically ______ the reliability of your sources to avoid including misinformation or biased data.", trans: "撰寫研究論文時，必須批判性地評估來源的可靠性，以避免包含錯誤資訊或有偏見的數據。", options: ["dictate (口述/命令)", "flatter (奉承)", "assess (評估)", "organize (組織)"], reason: "句意指為了避免錯誤資訊，需要「評估」(assess) 來源可靠性。" },
+            { id: 2, ans: "C", q: "Many teenagers feel frustrated when they ______ that their parents view their online gaming merely as a waste of time rather than a social activity.", trans: "許多青少年在察覺到父母僅將線上遊戲視為浪費時間而非社交活動時，會感到沮喪。", options: ["threaten (威脅)", "murmur (低語)", "perceive (察覺/認為)", "determine (決定)"], reason: "指青少年「察覺/認為」(perceive) 父母有這種看法。" },
+            { id: 3, ans: "B", q: "Working from home can be convenient, but it often blurs the ______ between professional responsibilities and personal leisure time, leading to burnout.", trans: "在家工作可能很方便，但往往模糊了職業責任與個人休閒時間之間的界線，導致倦怠。", options: ["exception (例外)", "distinction (區別/界線)", "revision (修訂)", "suspicion (懷疑)"], reason: "blur the distinction (模糊界線) 為常見搭配詞。" },
+            { id: 4, ans: "D", q: "The traffic during the holiday weekend was absolutely ______, turning a three-hour drive into a seven-hour nightmare.", trans: "連假週末的交通絕對是糟透了，將三小時的車程變成了七小時的噩夢。", options: ["conventional (傳統的)", "ignorant (無知的)", "alternate (交替的)", "dreadful (糟糕的/可怕的)"], reason: "描述交通狀況極差 (nightmare)，故選 dreadful。" },
+            { id: 5, ans: "A", q: "To solve this complex math problem, you need to ______ a different strategy than the one used in the previous example.", trans: "要解決這個複雜的數學問題，你需要採用與前一個例子不同的策略。", options: ["employ (採用/雇用)", "witness (目擊)", "retain (保留)", "confirm (確認)"], reason: "employ a strategy 指「採用策略」。" },
+            { id: 6, ans: "A", q: "During the election campaign, the candidate ______ to improve the city's public transportation system if elected, but he didn’t keep his promise eventually.", trans: "競選期間，該候選人承諾若當選將改善城市的大眾運輸系統，但他最終沒有信守諾言。", options: ["pledged (承諾/發誓)", "acquainted (使熟悉)", "compensated (補償)", "conserved (保存)"], reason: "對應後文 keep his promise，故選 pledged。" },
+            { id: 7, ans: "C", q: "The atmosphere in the waiting room was incredibly ______ as the finalists waited for the judges to announce the winner.", trans: "當決賽選手等待評審宣佈獲勝者時，候機室的氣氛非常緊張。", options: ["modest (謙虛的)", "indifferent (冷漠的)", "tense (緊張的)", "controversial (有爭議的)"], reason: "等待結果時氣氛通常是「緊張的」(tense)。" },
+            { id: 8, ans: "B", q: "We have made a(n) ______ schedule for the trip, but the final dates depend on flight availability and weather conditions.", trans: "我們制定了一個暫定的旅行時間表，但最終日期取決於航班狀況和天氣條件。", options: ["infectious (傳染性的)", "tentative (暫定的)", "exclusive (獨家的)", "furious (憤怒的)"], reason: "因取決於其他因素尚未確定，故為「暫定的」(tentative)。" },
+            { id: 9, ans: "D", q: "Despite the heavy criticism from environmental groups, the company refused to ______ its plans to build a new factory near the protected forest.", trans: "儘管受到環保團體的嚴厲批評，該公司仍拒絕撤回其在保護林附近建造新工廠的計劃。", options: ["negotiate with (協商)", "embark on (著手)", "invest in (投資)", "retreat from (撤退/撤回)"], reason: "refused to retreat from (拒絕撤回/放棄) 計畫。" },
+            { id: 10, ans: "B", q: "The speaker’s ability to ______ the audience with his storytelling made the two-hour lecture feel surprisingly short.", trans: "演講者用故事吸引觀眾的能力，讓兩小時的講座感覺出奇地短。", options: ["conduct (指揮/執行)", "captivate (使著迷/吸引)", "owe (欠)", "enhance (增強)"], reason: "讓時間感覺變短代表觀眾被「吸引」(captivate) 住內容。" },
+            { id: 11, ans: "D", q: "Although the mobile game was released months ago, it started to truly ______ only after a famous streamer played it live for millions of viewers.", trans: "雖然這款手遊已發布數月，但直到一位知名直播主在數百萬觀眾面前遊玩後，它才真正開始走紅。", options: ["go unnoticed (被忽視)", "stay tuned (敬請期待)", "follow suit (照做)", "take off (起飛/走紅)"], reason: "take off 指事物開始成功、流行。" },
+            { id: 12, ans: "D", q: "For the final presentation, the teacher emphasized that the group would be graded ______, meaning the entire team receives the same score regardless of individual effort.", trans: "對於期末報告，老師強調將會集體評分，意味著無論個人努力如何，整個團隊都會得到相同的分數。", options: ["liberally (慷慨地)", "intentionally (故意地)", "considerably (相當地)", "collectively (集體地)"], reason: "全組同分即為「集體地」(collectively) 評分。" },
+            { id: 13, ans: "C", q: "To lead the creative team, we need a(n)______ person who is not only full of energy but also constantly generating new and exciting concepts.", trans: "為了帶領創意團隊，我們需要一個充滿活力且能不斷產生新穎有趣概念的人。", options: ["official (官方的)", "complex (複雜的)", "dynamic (充滿活力的/動態的)", "legitimate (合法的)"], reason: "full of energy 對應 dynamic。" },
+            { id: 14, ans: "C", q: "To ease the burden on her shoulders, the hiker stopped to ______ her heavy backpack on a large rock while she checked the map.", trans: "為了減輕肩上的負擔，登山客停下來將沈重的背包靠在一塊大石頭上，同時查看地圖。", options: ["disrupt (中斷)", "click (點擊)", "rest (靠/休息)", "deliver (遞送)"], reason: "rest something on... 將某物靠在/擱在...上。" },
+            { id: 15, ans: "A", q: "Due to the storm, the internet connection was ______, making it impossible for me to attend the online meeting without interruptions.", trans: "由於暴風雨，網路連線斷斷續續，使我無法不受干擾地參加線上會議。", options: ["intermittent (間歇的/斷續的)", "potential (潛在的)", "primary (主要的)", "continuous (連續的)"], reason: "without interruptions 是不可能的，代表連線是「斷斷續續的」(intermittent)。" },
+            { id: 16, ans: "B", q: "To reduce carbon emissions effectively, the government needs to implement ______ changes to its energy policies rather than minor, temporary adjustments.", trans: "為了有效減少碳排放，政府需要對其能源政策實施根本性的改變，而非微小的、暫時的調整。", options: ["indigenous (本土的)", "radical (激進的/根本的)", "repetitive (重複的)", "common (常見的)"], reason: "對比 minor (微小的)，需要的是 radical (根本的/徹底的) 改變。" },
+            { id: 17, ans: "C", q: "Constant criticism from the coach served only to ______ the player's confidence rather than motivate him to improve.", trans: "教練不斷的批評只會削弱球員的信心，而不是激勵他進步。", options: ["navigate (導航)", "safeguard (保護)", "undermine (破壞/削弱)", "convey (傳達)"], reason: "批評通常會「削弱」(undermine) 信心。" },
+            { id: 18, ans: "A", q: "The successful ______ of artificial intelligence into the classroom curriculum has allowed students to learn at their own pace.", trans: "成功將人工智慧整合進課堂課程，讓學生能依照自己的步調學習。", options: ["integration (整合)", "privilege (特權)", "dispute (爭端)", "compromise (妥協)"], reason: "將A放入B中運作，稱為 integration。" },
+            { id: 19, ans: "B", q: "It took a few months for the exchange student to ______ the humid climate and spicy food of her host country.", trans: "交換學生花了幾個月才適應寄宿國家的潮濕氣候和辛辣食物。", options: ["be exposed to (暴露於)", "adapt to (適應)", "appeal to (吸引/呼籲)", "be subject to (受制於)"], reason: "習慣氣候與食物為「適應」(adapt to)。" },
+            { id: 20, ans: "B", q: "The conflict between the two groups escalated to the point where immediate police ______ was necessary to prevent violence.", trans: "兩組人馬的衝突升級到必須由警方立即介入以防止暴力的地步。", options: ["sincerity (真誠)", "intervention (介入/干預)", "signature (簽名)", "capacity (容量/能力)"], reason: "警方為了阻止暴力而採取的行動為「介入」(intervention)。" },
+            { id: 21, ans: "A", q: "The rapid rise of streaming services has completely reshaped the competitive ______ of the entertainment industry.", trans: "串流服務的快速崛起徹底重塑了娛樂產業的競爭版圖。", options: ["landscape (風景/局勢)", "formula (公式)", "quote (報價/引語)", "statement (聲明)"], reason: "competitive landscape 指「競爭版圖/局勢」。" },
+            { id: 22, ans: "C", q: "Instead of rushing to answer, the interviewee paused and responded ______ to the difficult question about his weaknesses.", trans: "面試者沒有急著回答，而是停頓了一下，深思熟慮地回答了關於他弱點的難題。", options: ["substantially (實質上)", "rapidly (迅速地)", "thoughtfully (深思熟慮地)", "seemingly (表面上)"], reason: "沒有 rushing (急促) 對應的是 thoughtfully (深思熟慮地)。" },
+            { id: 23, ans: "A", q: "The new solar panels are designed to ______ the sun's energy more efficiently, allowing the building to power itself even on cloudy days.", trans: "新型太陽能板旨在更有效地利用太陽能，讓建築物即使在陰天也能自行供電。", options: ["harness (利用/駕馭)", "whisper (低語)", "accompany (陪伴)", "convey (傳達)"], reason: "利用自然力量通常用 harness。" },
+            { id: 24, ans: "C", q: "While the automated email was informative, it lacked the personal ______ that a handwritten note from a real person conveys.", trans: "雖然這封自動電子郵件資訊豐富，但它缺乏真人手寫便條所傳達的人情味。", options: ["concern (關心)", "territory (領土)", "touch (觸感/風格/人情味)", "estimate (估計)"], reason: "personal touch 指「個人風格」或「人情味」。" },
+            { id: 25, ans: "D", q: "The online forum provided a safe space for the fans, fostering a strong sense of ______ where members felt understood and connected despite never meeting in person.", trans: "線上論壇為粉絲提供了一個安全的空間，培養了強烈的歸屬感，成員們雖然從未見面，卻感到被理解和連結。", options: ["instrument (儀器)", "capability (能力)", "narrative (敘事)", "community (社群/歸屬感)"], reason: "sense of community 指「社群意識」或「歸屬感」。" },
+
+            // --- Part 4-6: Cloze (26-50) ---
+            { 
+                id: 26, ans: "B", 
+                snippets: {
+                    pre: "According to the 2024 UNEP Food Waste Index, about 1.05 billion tons of food were generated in 2022, meaning 19% of available produce was wasted.",
+                    preTrans: "根據 2024 年聯合國環境署食物浪費指數，2022 年產生了約 10.5 億噸食物，這意味著有 19% 的可用農產品被浪費了。",
+                    cur: "If properly distributed, this massive __26__ could theoretically benefit 2.4 billion people.",
+                    curTrans: "如果分配得當，這巨大的 __26__ 理論上可以造福 24 億人。",
+                    post: "Addressing this __27__ crisis is \"Too Good To Go,\" an innovative app launched in Copenhagen in 2015 to connect consumers with businesses possessing excess inventory.",
+                    postTrans: "解決這個 __27__ 危機的是「Too Good To Go」，這是一款 2015 年在哥本哈根推出的創新應用程式，旨在連結消費者與擁有過剩庫存的商家。"
+                },
+                options: ["input (輸入)", "surplus (盈餘/過剩)", "spike (激增)", "character (角色)"], 
+                reason: "前文提到浪費了大量食物，這些多出來的食物即為 surplus。" 
+            },
+            { 
+                id: 27, ans: "D", 
+                snippets: {
+                    pre: "If properly distributed, this massive __26__ could theoretically benefit 2.4 billion people.",
+                    preTrans: "如果分配得當，這巨大的 __26__ 理論上可以造福 24 億人。",
+                    cur: "Addressing this __27__ crisis is \"Too Good To Go,\" an innovative app launched in Copenhagen in 2015 to connect consumers with businesses possessing excess inventory.",
+                    curTrans: "解決這個 __27__ 危機的是「Too Good To Go」，這是一款 2015 年在哥本哈根推出的創新應用程式，旨在連結消費者與擁有過剩庫存的商家。",
+                    post: "The concept is simple yet impactful.",
+                    postTrans: "這個概念簡單但影響深遠。"
+                },
+                options: ["simultaneous (同時的)", "sufficient (充足的)", "approximate (大約的)", "pressing (緊迫的/迫切的)"], 
+                reason: "食物浪費是一個嚴重且需立即解決的問題，故選 pressing。" 
+            },
+            { 
+                id: 28, ans: "C", 
+                snippets: {
+                    pre: "Participating stores fill \"magic bags\" with unsold goods, allowing users to purchase them at a fraction of the original cost.",
+                    preTrans: "參與的店家將未售出的商品裝入「魔法袋」，讓使用者能以原價的一小部分購買。",
+                    cur: "Because the contents are revealed only upon pickup, customers receive a surprise __28__ of items—perhaps ten bagels and two salads for a mere three dollars.",
+                    curTrans: "因為內容物只有在取貨時才會揭曉，顧客會收到令人驚喜的 __28__ 物品——也許是十個貝果和兩份沙拉，只要三美元。",
+                    post: "These perfectly edible goods would otherwise have __29__ decomposing in landfills.",
+                    postTrans: "這些完全可食用的商品否則 __29__ 在垃圾掩埋場分解。"
+                },
+                options: ["scaffold (鷹架)", "critic (評論家)", "assortment (各式各樣/混合)", "access (存取)"], 
+                reason: "an assortment of items 指各種物品的組合。" 
+            },
+            { 
+                id: 29, ans: "A", 
+                snippets: {
+                    pre: "Because the contents are revealed only upon pickup, customers receive a surprise __28__ of items—perhaps ten bagels and two salads for a mere three dollars.",
+                    preTrans: "因為內容物只有在取貨時才會揭曉，顧客會收到令人驚喜的 __28__ 物品——也許是十個貝果和兩份沙拉，只要三美元。",
+                    cur: "These perfectly edible goods would otherwise have __29__ decomposing in landfills.",
+                    curTrans: "這些完全可食用的商品否則「將會/本來會」__29__ 在垃圾掩埋場分解。",
+                    post: "Consequently, this model has __30__ swiftly among students and workers eager to reduce expenses.",
+                    postTrans: "因此，這種模式在渴望減少開支的學生和工薪族中迅速 __30__。"
+                },
+                options: ["ended up (結果是/最後變成)", "turned out (結果是)", "miss out on (錯過)", "delve into (鑽研)"], 
+                reason: "end up + V-ing 表示最後落得某種下場。" 
+            },
+            { 
+                id: 30, ans: "B", 
+                snippets: {
+                    pre: "These perfectly edible goods would otherwise have __29__ decomposing in landfills.",
+                    preTrans: "這些完全可食用的商品否則 __29__ 在垃圾掩埋場分解。",
+                    cur: "Consequently, this model has __30__ swiftly among students and workers eager to reduce expenses.",
+                    curTrans: "因此，這種模式在渴望減少開支的學生和工薪族中迅速 __30__。",
+                    post: "Beyond individual savings, the platform __31__ a community centered on environmental responsibility.",
+                    postTrans: "除了個人的節省，該平台也 __31__ 了一個以環境責任為中心的社群。"
+                },
+                options: ["took responsibility (負責)", "caught on (變得流行/受歡迎)", "made up (編造/組成)", "stroke gold (發大財)"], 
+                reason: "catch on 指事物變得受歡迎、流行起來。" 
+            },
+            { 
+                id: 31, ans: "D", 
+                snippets: {
+                    pre: "Consequently, this model has __30__ swiftly among students and workers eager to reduce expenses.",
+                    preTrans: "因此，這種模式在渴望減少開支的學生和工薪族中迅速 __30__。",
+                    cur: "Beyond individual savings, the platform __31__ a community centered on environmental responsibility.",
+                    curTrans: "除了個人的節省，該平台也 __31__ 了一個以環境責任為中心的社群。",
+                    post: "By promoting __32__ and a zero-waste lifestyle, Too Good To Go is successfully encouraging a necessary shift toward a more sustainable future.",
+                    postTrans: "藉由推廣 __32__ 和零浪費的生活方式，Too Good To Go 正成功地鼓勵人們向更永續的未來轉變。"
+                },
+                options: ["utilizes (利用)", "disciplines (管教)", "measures (測量)", "fosters (培養/促進)"], 
+                reason: "foster a community 培養/促進社群意識。" 
+            },
+            { 
+                id: 32, ans: "D", 
+                snippets: {
+                    pre: "Beyond individual savings, the platform __31__ a community centered on environmental responsibility.",
+                    preTrans: "除了個人的節省，該平台也 __31__ 了一個以環境責任為中心的社群。",
+                    cur: "By promoting __32__ and a zero-waste lifestyle, Too Good To Go is successfully encouraging a necessary shift toward a more sustainable future.",
+                    curTrans: "藉由推廣 __32__ 和零浪費的生活方式，Too Good To Go 正成功地鼓勵人們向更永續的未來轉變。",
+                    post: "(End of passage)",
+                    postTrans: "(文章結束)"
+                },
+                options: ["order (秩序)", "outcome (結果)", "chit-chat (閒聊)", "frugality (節儉)"], 
+                reason: "購買便宜剩食與減少開支有關，故選 frugality。" 
+            },
+            // Text B
+            { 
+                id: 33, ans: "A", 
+                snippets: {
+                    pre: "Spoons are an indispensable utensil in human history, evolving from primitive tools to refined symbols of culture.",
+                    preTrans: "湯匙是人類歷史上不可或缺的器具，從原始工具演變為精緻的文化象徵。",
+                    cur: "Archaeological findings suggest that ancient Egyptians are said to __33__ spoons using flint, wood, and ivory, primarily for religious ceremonies rather than mere eating.",
+                    curTrans: "考古發現顯示，據說古埃及人 __33__ 湯匙，使用燧石、木頭和象牙，主要用於宗教儀式而非單純進食。",
+                    post: "These early versions were often elaborate, and priests would even have hieroglyphs __34__ the handles to depict sacred events.",
+                    postTrans: "這些早期版本通常製作精良，祭司甚至會在手柄上 __34__ 象形文字來描繪神聖事件。"
+                },
+                options: ["have made", "make", "having made", "making"], 
+                reason: "are said to + have p.p. 表示據說過去已經做過/發生過的事。" 
+            },
+            { 
+                id: 34, ans: "B", 
+                snippets: {
+                    pre: "Archaeological findings suggest that ancient Egyptians are said to __33__ spoons using flint, wood, and ivory, primarily for religious ceremonies rather than mere eating.",
+                    preTrans: "考古發現顯示，據說古埃及人 __33__ 湯匙，使用燧石、木頭和象牙，主要用於宗教儀式而非單純進食。",
+                    cur: "These early versions were often elaborate, and priests would even have hieroglyphs __34__ the handles to depict sacred events.",
+                    curTrans: "這些早期版本通常製作精良，祭司甚至會讓象形文字 __34__ 在手柄上來描繪神聖事件。",
+                    post: "Later, in Greece and Rome, silver and bronze versions became distinct markers of wealth.",
+                    postTrans: "後來在希臘和羅馬，銀製和青銅製的版本成為財富的顯著標誌。"
+                },
+                options: ["found (發現)", "adorn (裝飾)", "reflect (反射)", "monitor (監控)"], 
+                reason: "have something adorn... (讓...裝飾在...)，或此處語意為將象形文字裝飾於手柄。" 
+            },
+            { 
+                id: 35, ans: "B", 
+                snippets: {
+                    pre: "Later, in Greece and Rome, silver and bronze versions became distinct markers of wealth.",
+                    preTrans: "後來在希臘和羅馬，銀製和青銅製的版本成為財富的顯著標誌。",
+                    cur: "During the Middle Ages, spoons were __35__ from accessible materials like horn and wood for daily use.",
+                    curTrans: "在中世紀，湯匙是用容易取得的材料如獸角和木頭 __35__ 而成，供日常使用。",
+                    post: "However, the design continued to refine, and __36__ the late 1700s, the recognizable modern spoon shape was fully established.",
+                    postTrans: "然而，設計持續精進，且 __36__ 1700 年代晚期，現今可辨識的現代湯匙形狀已完全確立。"
+                },
+                options: ["transformed (轉變)", "crafted (精製/製作)", "involved (涉及)", "traced (追蹤)"], 
+                reason: "be crafted from 指由...工藝製作而成。" 
+            },
+            { 
+                id: 36, ans: "C", 
+                snippets: {
+                    pre: "During the Middle Ages, spoons were __35__ from accessible materials like horn and wood for daily use.",
+                    preTrans: "在中世紀，湯匙是用容易取得的材料如獸角和木頭 __35__ 而成，供日常使用。",
+                    cur: "However, the design continued to refine, and __36__ the late 1700s, the recognizable modern spoon shape was fully established.",
+                    curTrans: "然而，設計持續精進，且 __36__ 1700 年代晚期，現今可辨識的現代湯匙形狀已完全確立。",
+                    post: "In modern times, spoons serve functions beyond dining, particularly as precise measuring tools in cooking.",
+                    postTrans: "在現代，湯匙的功能不僅止於進食，特別是在烹飪中作為精確的測量工具。"
+                },
+                options: ["not until (直到...才)", "until (直到)", "by (到了...時候)", "since (自從)"], 
+                reason: "by + 時間點，表示在該時間點之前或當下已經完成的狀態。" 
+            },
+            { 
+                id: 37, ans: "A", 
+                snippets: {
+                    pre: "In modern times, spoons serve functions beyond dining, particularly as precise measuring tools in cooking.",
+                    preTrans: "在現代，湯匙的功能不僅止於進食，特別是在烹飪中作為精確的測量工具。",
+                    cur: "A standard teaspoon holds roughly 5 ml, while a tablespoon measures three times the __37__ of a teaspoon.",
+                    curTrans: "標準茶匙約容納 5 毫升，而大湯匙測量的量是茶匙 __37__ 的三倍。",
+                    post: "A dessertspoon falls in between, being roughly equivalent to 10 ml.",
+                    postTrans: "點心匙則介於兩者之間，約等於 10 毫升。"
+                },
+                options: ["volume (容量/體積)", "perception (感知)", "variation (變化)", "version (版本)"], 
+                reason: "測量液體多寡用 volume。" 
+            },
+            { 
+                id: 38, ans: "C", 
+                snippets: {
+                    pre: "Designs have also become specialized; for instance, caviar spoons are uniquely made of materials like gold or animal horn to prevent altering the delicacy's flavor.",
+                    preTrans: "設計也變得專業化；例如，魚子醬湯匙是用金或獸角等材料獨特製成，以防止改變這種美食的風味。",
+                    cur: "__38__, the spoon’s journey from a ceremonial object to a versatile, multi-functional tool highlights its enduring role in our daily lives.",
+                    curTrans: "__38__，湯匙從儀式物品到多功能工具的旅程，凸顯了它在我們日常生活中持久的角色。",
+                    post: "(End of passage)",
+                    postTrans: "(文章結束)"
+                },
+                options: ["For instance (例如)", "In addition (此外)", "In essence (本質上/總之)", "By contrast (相比之下)"], 
+                reason: "In essence 作為總結語氣，意指「本質上/總之」。" 
+            },
+            // Text C
+            { 
+                id: 39, ans: "C", 
+                snippets: {
+                    pre: "\"Is my success just luck?\" or \"Will people discover I am a fraud?\"",
+                    preTrans: "「我的成功只是運氣嗎？」或「人們會發現我是個冒牌貨嗎？」",
+                    cur: "These nagging questions are hallmarks of Imposter Syndrome, a psychological phenomenon __39__ individuals question their accomplishments despite evident success.",
+                    curTrans: "這些惱人的問題是冒牌者症候群的標誌，這是一種心理現象，__39__ 個人會質疑自己的成就，儘管有明顯的成功。",
+                    post: "Sufferers live in constant fear of being exposed as frauds.",
+                    postTrans: "患者生活在隨時可能被揭穿是騙子的恐懼中。"
+                },
+                options: ["what", "whose", "where", "which"], 
+                reason: "phenomenon 後面接關係副詞 where (= in which) 引導形容詞子句。" 
+            },
+            { 
+                id: 40, ans: "D", 
+                snippets: {
+                    pre: "Sufferers live in constant fear of being exposed as frauds.",
+                    preTrans: "患者生活在隨時可能被揭穿是騙子的恐懼中。",
+                    cur: "They frequently __40__ their achievements to external factors like luck rather than their own abilities.",
+                    curTrans: "他們經常將自己的成就 __40__ 外在因素，如運氣，而不是自己的能力。",
+                    post: "It results in chronic stress and a __41__ to embrace new opportunities.",
+                    postTrans: "這導致長期壓力以及對接受新機會的 __41__。"
+                },
+                options: ["contribute (貢獻)", "lead (導致)", "refer (參考)", "attribute (歸因)"], 
+                reason: "attribute A to B 將A歸因於B。" 
+            },
+            { 
+                id: 41, ans: "A", 
+                snippets: {
+                    pre: "They frequently __40__ their achievements to external factors like luck rather than their own abilities.",
+                    preTrans: "他們經常將自己的成就 __40__ 外在因素，如運氣，而不是自己的能力。",
+                    cur: "It results in chronic stress and a __41__ to embrace new opportunities.",
+                    curTrans: "這導致長期壓力以及對接受新機會的 __41__。",
+                    post: "Several factors drive this mindset.",
+                    postTrans: "有幾個因素驅動這種心態。"
+                },
+                options: ["reluctance (不情願)", "disturbance (干擾)", "pursuit (追求)", "prospect (前景)"], 
+                reason: "冒牌者症候群會讓人不敢接受挑戰，故選 reluctance。" 
+            },
+            { 
+                id: 42, ans: "A", 
+                snippets: {
+                    pre: "Several factors drive this mindset.",
+                    preTrans: "有幾個因素驅動這種心態。",
+                    cur: "Early family dynamics or intense societal pressure can foster deep-seated feelings of __42__, particularly in competitive environments.",
+                    curTrans: "早期的家庭互動或強烈的社會壓力會助長根深蒂固的 __42__ 感，特別是在競爭激烈的環境中。",
+                    post: "Furthermore, perfectionism plays a significant role; when individuals set unreasonably high standards, they naturally __43__, which reinforces their internal cycle of doubt.",
+                    postTrans: "此外，完美主義扮演重要角色；當個人設定不合理的高標準時，他們自然會 __43__，這強化了他們內在的懷疑循環。"
+                },
+                options: ["inadequacy (不足/不適任)", "extent (程度)", "application (應用)", "theory (理論)"], 
+                reason: "feelings of inadequacy 覺得自己不夠好。" 
+            },
+            { 
+                id: 43, ans: "B", 
+                snippets: {
+                    pre: "Early family dynamics or intense societal pressure can foster deep-seated feelings of __42__, particularly in competitive environments.",
+                    preTrans: "早期的家庭互動或強烈的社會壓力會助長根深蒂固的 __42__ 感，特別是在競爭激烈的環境中。",
+                    cur: "Furthermore, perfectionism plays a significant role; when individuals set unreasonably high standards, they naturally __43__, which reinforces their internal cycle of doubt.",
+                    curTrans: "此外，完美主義扮演重要角色；當個人設定不合理的高標準時，他們自然會 __43__，這強化了他們內在的懷疑循環。",
+                    post: "Since this condition is __44__, affecting roughly 70% of people, it is crucial to manage it before specific anxieties begin to escalate.",
+                    postTrans: "由於這種狀況相當 __44__，影響了約 70% 的人，因此在特定焦慮開始升級之前進行管理至關重要。"
+                },
+                options: ["head off (阻止)", "fall short (達不到/不足)", "let go (放手)", "hold back (阻礙)"], 
+                reason: "標準太高自然容易 fall short (未達標)。" 
+            },
+            { 
+                id: 44, ans: "C", 
+                snippets: {
+                    pre: "Furthermore, perfectionism plays a significant role; when individuals set unreasonably high standards, they naturally __43__, which reinforces their internal cycle of doubt.",
+                    preTrans: "此外，完美主義扮演重要角色；當個人設定不合理的高標準時，他們自然會 __43__，這強化了他們內在的懷疑循環。",
+                    cur: "Since this condition is __44__, affecting roughly 70% of people, it is crucial to manage it before specific anxieties begin to escalate.",
+                    curTrans: "由於這種狀況相當 __44__，影響了約 70% 的人，因此在特定焦慮開始升級之前進行管理至關重要。",
+                    post: "To combat these feelings, one must seek support from mentors and actively record positive feedback to verify their own competence.",
+                    postTrans: "為了對抗這些感覺，人們必須尋求導師的支持，並積極記錄正面的回饋以證實自己的能力。"
+                },
+                options: ["inspirational (鼓舞人心的)", "decent (體面的)", "prevalent (普遍的)", "manipulative (操縱的)"], 
+                reason: "影響 70% 的人代表很普遍。" 
+            },
+            { 
+                id: 45, ans: "B", 
+                snippets: {
+                    pre: "To combat these feelings, one must seek support from mentors and actively record positive feedback to verify their own competence.",
+                    preTrans: "為了對抗這些感覺，人們必須尋求導師的支持，並積極記錄正面的回饋以證實自己的能力。",
+                    cur: "By shifting focus from perfection to progress, we can prevent this syndrome from continuing to __45__ our professional development.",
+                    curTrans: "藉由將焦點從完美轉移到進步，我們可以防止這種症候群繼續 __45__ 我們的職業發展。",
+                    post: "Ultimately, acknowledging these internal struggles is the vital first step toward fostering a healthier, more confident self-perception.",
+                    postTrans: "最終，承認這些內在掙扎是培養更健康、更自信的自我認知的關鍵第一步。"
+                },
+                options: ["intensify (加劇)", "hinder (阻礙)", "reframe (重構)", "tackle (處理)"], 
+                reason: "負面影響會 hinder (阻礙) 發展。" 
+            },
+            // Text D
+            { 
+                id: 46, ans: "C", 
+                snippets: {
+                    pre: "Have you been yearning to travel?",
+                    preTrans: "你一直渴望去旅行嗎？",
+                    cur: "Since COVID-19 lockdowns were __46__, a massive surge in tourism has fueled the rapid rise of budget airlines.",
+                    curTrans: "自從 COVID-19 封鎖措施被 __46__ 以來，旅遊業的激增推動了廉價航空公司的迅速崛起。",
+                    post: "These low-cost carriers have become increasingly popular, often outperforming traditional airlines in the post-pandemic market.",
+                    postTrans: "這些低成本航空公司變得越來越受歡迎，在後疫情市場中經常表現優於傳統航空公司。"
+                },
+                options: ["inferred (推論)", "underlined (強調)", "lifted (解除)", "simplified (簡化)"], 
+                reason: "lift lockdowns 解除封鎖。" 
+            },
+            { 
+                id: 47, ans: "B", 
+                snippets: {
+                    pre: "These low-cost carriers have become increasingly popular, often outperforming traditional airlines in the post-pandemic market.",
+                    preTrans: "這些低成本航空公司變得越來越受歡迎，在後疫情市場中經常表現優於傳統航空公司。",
+                    cur: "Their core strategy is to __47__ non-essential features to drastically reduce operating costs.",
+                    curTrans: "他們的核心策略是 __47__ 非必要的功能，以大幅降低營運成本。",
+                    post: "By utilizing smaller, fuel-efficient aircraft and flying into secondary airports with lower fees, they can offer significantly cheaper tickets.",
+                    postTrans: "藉由使用較小、省油的飛機並飛往費用較低的次級機場，他們可以提供明顯更便宜的機票。"
+                },
+                options: ["complement (補充)", "eliminate (消除/淘汰)", "illustrate (說明)", "boast (誇耀)"], 
+                reason: "廉航特色是減少服務以降低成本，故選 eliminate。" 
+            },
+            { 
+                id: 48, ans: "A", 
+                snippets: {
+                    pre: "However, passengers should understand that this model relies on strict cost control.",
+                    preTrans: "然而，乘客應該了解這種模式依賴於嚴格的成本控制。",
+                    cur: "On board, standard amenities like meals, pillows, or entertainment are __48__ absent.",
+                    curTrans: "在飛機上，像餐點、枕頭或娛樂系統等標準設施 __48__ 都不存在。",
+                    post: "Furthermore, passengers must pay extra for necessities like checked luggage, __49__ the flight duration.",
+                    postTrans: "此外，乘客必須為託運行李等必需品支付額外費用，__49__ 飛行時間長短。"
+                },
+                options: ["virtually (幾乎/虛擬地)", "tremendously (巨大地)", "particularly (特別地)", "respectively (分別地)"], 
+                reason: "virtually absent 幾乎沒有。" 
+            },
+            { 
+                id: 49, ans: "A", 
+                snippets: {
+                    pre: "On board, standard amenities like meals, pillows, or entertainment are __48__ absent.",
+                    preTrans: "在飛機上，像餐點、枕頭或娛樂系統等標準設施 __48__ 都不存在。",
+                    cur: "Furthermore, passengers must pay extra for necessities like checked luggage, __49__ the flight duration.",
+                    curTrans: "此外，乘客必須為託運行李等必需品支付額外費用，__49__ 飛行時間長短。",
+                    post: "Consequently, airlines charge separate fees for almost everything, from seat selection to simple refreshments.",
+                    postTrans: "因此，航空公司幾乎對所有東西都單獨收費，從選位到簡單的茶點。"
+                },
+                options: ["regardless of (不管/不顧)", "apart from (除了...之外)", "thanks to (幸虧)", "coupled with (加上)"], 
+                reason: "regardless of the flight duration 不管飛行時間長短。" 
+            },
+            { 
+                id: 50, ans: "D", 
+                snippets: {
+                    pre: "Travelers must therefore be careful, as these additional costs can quickly accumulate.",
+                    preTrans: "因此旅客必須小心，因為這些額外費用可能會迅速累積。",
+                    cur: "A seemingly cheap ticket might ultimately equal the price of a full-service __50__ once all add-ons are calculated.",
+                    curTrans: "一旦計算所有附加項目，一張看似便宜的機票最終可能等於全方位服務 __50__ 的價格。",
+                    post: "Furthermore, these monetary savings often come at the expense of physical comfort, with non-reclining seats and tighter legroom being common.",
+                    postTrans: "此外，這些金錢上的節省往往以犧牲身體舒適為代價，無法後傾的座椅和更窄的腿部空間很常見。"
+                },
+                options: ["feat (功績)", "onset (開端)", "border (邊界)", "rival (對手)"], 
+                reason: "full-service rival 指傳統全服務航空公司（廉航的競爭對手）。" 
+            }
+        ];
+
+        // ==========================================
+        // UI Logic
+        // ==========================================
+        const input = document.getElementById('queryInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const allAnsBtn = document.getElementById('allAnsBtn');
+        const allDetailBtn = document.getElementById('allDetailBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultArea = document.getElementById('resultArea');
+        const errorMsg = document.getElementById('errorMsg');
+        const sessionCountEl = document.getElementById('sessionQueryCount');
+        let sessionQueries = 0;
+
+        // --- Session Counter ---
+        function incrementQueryCount() {
+            sessionQueries++;
+            sessionCountEl.textContent = sessionQueries;
+            sessionCountEl.classList.remove('text-gray-800');
+            sessionCountEl.classList.add('text-blue-600', 'scale-125', 'transition-transform');
+            setTimeout(() => {
+                sessionCountEl.classList.remove('text-blue-600', 'scale-125');
+                sessionCountEl.classList.add('text-gray-800');
+            }, 200);
+        }
+
+        // --- Event Listeners ---
+        submitBtn.addEventListener('click', () => processQuery(input.value));
+        
+        allAnsBtn.addEventListener('click', () => {
+            input.value = 'all-ans';
+            processQuery('all-ans');
+        });
+
+        allDetailBtn.addEventListener('click', () => {
+            input.value = 'all-detail';
+            processQuery('all-detail');
+        });
+
+        clearBtn.addEventListener('click', () => {
+            input.value = '';
+            resultArea.innerHTML = '<div class="text-center text-gray-400 mt-10">請輸入題號或點擊上方按鈕開始</div>';
+            errorMsg.classList.add('hidden');
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') processQuery(input.value);
+        });
+
+        // --- Core Logic ---
+        function processQuery(val) {
+            val = val.trim().toLowerCase();
+            errorMsg.classList.add('hidden');
+
+            // Dispatch Action
+            if (val === 'all-ans' || val === 'all') { // Compatible with 'all'
+                incrementQueryCount();
+                renderAllAnswers();
+            } 
+            else if (val === 'all-detail') {
+                incrementQueryCount();
+                renderAllDetails();
+            } 
+            else {
+                const num = parseInt(val);
+                if (!isNaN(num) && num >= 1 && num <= 50) {
+                    incrementQueryCount();
+                    renderSingleDetail(num);
+                } else {
+                    errorMsg.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Action 1: Show Grid (All Answers)
+        function renderAllAnswers() {
+            let html = `
+                <div class="bg-white rounded-xl shadow p-6 fade-in ring-1 ring-gray-900/5">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h2 class="text-xl font-bold text-gray-800">快速對答表</h2>
+                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">共 50 題</span>
+                    </div>
+                    <div class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+            `;
+            
+            examData.forEach(item => {
+                html += `
+                    <div class="flex flex-col items-center p-2 border rounded bg-gray-50 hover:bg-blue-50 transition-colors">
+                        <span class="text-xs text-gray-400 mb-1">${item.id}</span>
+                        <span class="font-bold text-lg text-blue-600">${item.ans}</span>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+            resultArea.innerHTML = html;
+        }
+
+        // Action 2: Show Single Card
+        function renderSingleDetail(id) {
+            const data = examData.find(d => d.id === id);
+            if (!data) return;
+            resultArea.innerHTML = generateCardHTML(data);
+        }
+
+        // Action 3: Show All Cards
+        function renderAllDetails() {
+            // Concatenate HTML string for all 50 items
+            const fullHtml = examData.map(data => generateCardHTML(data)).join('');
+            resultArea.innerHTML = fullHtml;
+        }
+
+        // Helper: Generate HTML String for a Card
+        function generateCardHTML(data) {
+            let questionBlock = '';
+
+            // Handle Cloze Context
+            if (data.snippets) {
+                let curSentenceHtml = data.snippets.cur.replace(/__(\d+)__/g, (match, p1) => {
+                    const isCurrent = parseInt(p1) === data.id;
+                    const style = isCurrent ? "border-blue-500 text-blue-600 bg-blue-50" : "border-gray-300 text-gray-400";
+                    return `<span class="border-b-2 ${style} px-1 mx-1 font-bold inline-block min-w-[30px] text-center">${p1}</span>`;
+                });
+
+                questionBlock = `
+                    <div class="space-y-4 mb-6">
+                        <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-gray-300">
+                            <div class="text-xs text-gray-400 uppercase font-bold mb-1">Previous</div>
+                            <p class="text-gray-600 mb-1">${data.snippets.pre}</p>
+                            <p class="text-gray-500 text-sm border-t border-gray-200 pt-1 mt-1">${data.snippets.preTrans}</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                            <div class="text-xs text-blue-400 uppercase font-bold mb-1">Target</div>
+                            <p class="text-gray-800 text-lg font-medium mb-2 leading-relaxed">${curSentenceHtml}</p>
+                            <p class="text-gray-600 text-sm border-t border-blue-200 pt-2 mt-1 font-medium">${data.snippets.curTrans}</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-gray-300">
+                            <div class="text-xs text-gray-400 uppercase font-bold mb-1">Following</div>
+                            <p class="text-gray-600 mb-1">${data.snippets.post}</p>
+                            <p class="text-gray-500 text-sm border-t border-gray-200 pt-1 mt-1">${data.snippets.postTrans}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                let qText = data.q.replace(/_+/g, `<span class="border-b-2 border-blue-500 text-transparent px-8 select-none">__</span>`);
+                questionBlock = `
+                    <div class="text-xl font-medium mb-4 text-gray-800 leading-relaxed">${qText}</div>
+                    <div class="mb-6">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">中文翻譯</h3>
+                        <p class="text-gray-600 bg-gray-50 p-3 rounded border border-gray-100">${data.trans}</p>
+                    </div>
+                `;
+            }
+
+            // Options
+            let optionsHtml = '<div class="space-y-3 mb-6">';
+            data.options.forEach((optText, index) => {
+                const labels = ['A', 'B', 'C', 'D'];
+                const currentLabel = labels[index];
+                const isCorrect = (currentLabel === data.ans);
+                
+                const containerClass = isCorrect 
+                    ? 'bg-green-50 border-green-400 shadow-sm ring-1 ring-green-400' 
+                    : 'bg-white border-gray-200';
+                const textClass = isCorrect ? 'text-green-800 font-bold' : 'text-gray-600';
+                const labelClass = isCorrect ? 'text-green-600' : 'text-gray-400';
+                const icon = isCorrect ? '<span class="text-green-600 text-xl">✅</span>' : '';
+
+                optionsHtml += `
+                    <div class="flex items-center p-3 border rounded-lg ${containerClass}">
+                        <span class="w-8 font-bold ${labelClass} text-lg">${currentLabel}.</span>
+                        <span class="flex-1 ${textClass}">${optText}</span>
+                        ${icon}
+                    </div>
+                `;
+            });
+            optionsHtml += '</div>';
+
+            return `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden fade-in ring-1 ring-gray-900/5">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4 flex justify-between items-center text-white shadow-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-400/30 px-2 py-1 rounded text-xs font-mono uppercase tracking-wide">Q${data.id}</span>
+                            <h2 class="text-lg font-bold">詳解卡片</h2>
+                        </div>
+                        <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-bold shadow-sm">Ans: ${data.ans}</span>
+                    </div>
+                    <div class="p-6">
+                        ${questionBlock}
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">選項分析</h3>
+                        ${optionsHtml}
+                        <div class="mt-6 pt-5 border-t border-gray-100 bg-yellow-50/50 -mx-6 px-6 pb-2">
+                            <h3 class="text-xs font-bold text-yellow-600 uppercase tracking-wider mb-2 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                解析詳情
+                            </h3>
+                            <p class="text-gray-700 text-sm leading-relaxed">${data.reason}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+    </script>
+</body>
+</html>
